@@ -14,7 +14,7 @@ mod banner_ad_type;
 mod bid;
 mod bid_request;
 mod bid_response;
-mod category;
+pub(crate) mod category;
 mod content;
 mod data;
 mod device;

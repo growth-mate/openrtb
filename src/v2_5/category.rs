@@ -49,7 +49,7 @@ macro_rules! categories {
             }
         }
 
-        static TO_CATEGORY: phf::Map<&'static str, Category> = phf_map! {
+        pub static TO_CATEGORY: phf::Map<&'static str, Category> = phf_map! {
             $(
                 $pval => Category::$parent($parent::$parent),  // parent variant
                 $($sval => Category::$parent($parent::$sub),)* // all subcategories

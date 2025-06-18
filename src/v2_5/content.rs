@@ -22,7 +22,7 @@ pub struct Content {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub series: Option<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none", deserialize_with = "crate::serde_utils::int_or_string_to_string")]
     pub season: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]

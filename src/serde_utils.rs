@@ -6,9 +6,8 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use serde;
 use serde::de::Visitor;
-use serde_json;
+use serde::Deserialize;
 
 pub type Ext = serde_json::map::Map<String, serde_json::value::Value>;
 
@@ -222,4 +221,117 @@ where
     D: serde::Deserializer<'de>,
 {
     deserializer.deserialize_any(StringVisitor)
+}
+
+use crate::v2_5::Category;
+
+struct StringOrVecVisitor;
+
+impl<'de> Visitor<'de> for StringOrVecVisitor {
+    type Value = Vec<Category>;
+
+    fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter.write_str("a string or array of strings")
+    }
+
+    fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
+    where
+        E: serde::de::Error,
+    {
+        // Parse category using the same logic as Category's deserializer
+        let category = match crate::v2_5::category::TO_CATEGORY.get(value).cloned() {
+            Some(c) => c,
+            None => Category::Unknown(value.to_string()),
+        };
+        Ok(vec![category])
+    }
+
+    fn visit_string<E>(self, value: String) -> Result<Self::Value, E>
+    where
+        E: serde::de::Error,
+    {
+        self.visit_str(&value)
+    }
+
+    fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+    where
+        A: serde::de::SeqAccess<'de>,
+    {
+        let mut vec = Vec::new();
+        while let Some(value) = seq.next_element::<String>()? {
+            // Parse category using the same logic as Category's deserializer
+            let category = match crate::v2_5::category::TO_CATEGORY.get(value.as_str()).cloned() {
+                Some(c) => c,
+                None => Category::Unknown(value),
+            };
+            vec.push(category);
+        }
+        Ok(vec)
+    }
+}
+
+/// Deserialize a field that can be either a single string or an array of strings into Vec<Category>
+pub fn string_or_vec_category<'de, D>(deserializer: D) -> Result<Option<Vec<Category>>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    Option::deserialize(deserializer)?.map(|v| {
+        match v {
+            serde_json::Value::String(s) => {
+                let category = match crate::v2_5::category::TO_CATEGORY.get(s.as_str()).cloned() {
+                    Some(c) => c,
+                    None => Category::Unknown(s),
+                };
+                Ok(vec![category])
+            },
+            serde_json::Value::Array(arr) => {
+                let mut categories = Vec::new();
+                for item in arr {
+                    if let serde_json::Value::String(s) = item {
+                        let category = match crate::v2_5::category::TO_CATEGORY.get(s.as_str()).cloned() {
+                            Some(c) => c,
+                            None => Category::Unknown(s),
+                        };
+                        categories.push(category);
+                    }
+                }
+                Ok(categories)
+            },
+            _ => Err(serde::de::Error::custom("expected string or array of strings"))
+        }
+    }).transpose()
+}
+
+/// Deserialize a field that can be either a boolean or an integer into i32
+pub fn bool_or_int_to_i32<'de, D>(deserializer: D) -> Result<Option<i32>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    Option::deserialize(deserializer)?.map(|v| {
+        match v {
+            serde_json::Value::Bool(b) => Ok(if b { 1 } else { 0 }),
+            serde_json::Value::Number(n) => {
+                if let Some(i) = n.as_i64() {
+                    Ok(i as i32)
+                } else {
+                    Err(serde::de::Error::custom("expected integer"))
+                }
+            },
+            _ => Err(serde::de::Error::custom("expected boolean or integer"))
+        }
+    }).transpose()
+}
+
+/// Deserialize a field that can be either a string or an integer into String
+pub fn int_or_string_to_string<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    Option::deserialize(deserializer)?.map(|v| {
+        match v {
+            serde_json::Value::String(s) => Ok(s),
+            serde_json::Value::Number(n) => Ok(n.to_string()),
+            _ => Err(serde::de::Error::custom("expected string or integer"))
+        }
+    }).transpose()
 }

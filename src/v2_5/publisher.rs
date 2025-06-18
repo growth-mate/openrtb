@@ -14,8 +14,8 @@ pub struct Publisher {
     pub id: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub cat: Vec<Category>,
+    #[serde(default, skip_serializing_if = "Option::is_none", deserialize_with = "crate::serde_utils::string_or_vec_category")]
+    pub cat: Option<Vec<Category>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub domain: Option<String>,
 
@@ -28,7 +28,7 @@ impl Default for Publisher {
         Publisher {
             id: "".to_string(),
             name: None,
-            cat: vec![],
+            cat: None,
             domain: None,
             ext: None,
         }
