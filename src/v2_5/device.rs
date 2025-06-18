@@ -7,7 +7,7 @@
 // except according to those terms.
 
 use super::geo::Geo;
-use serde_utils;
+use crate::serde_utils;
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub struct Device {

@@ -1,5 +1,5 @@
 use super::category::Category;
-use serde_utils;
+use crate::serde_utils;
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Bid {

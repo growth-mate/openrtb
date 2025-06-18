@@ -7,7 +7,7 @@
 // except according to those terms.
 
 use super::segment::Segment;
-use serde_utils;
+use crate::serde_utils;
 
 // This object used by publishers to pass additional attributes about the user or content.
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Default)]

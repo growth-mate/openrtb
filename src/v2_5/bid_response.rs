@@ -7,7 +7,7 @@
 // except according to those terms.
 
 use super::seat_bid::SeatBid;
-use serde_utils;
+use crate::serde_utils;
 
 // 4.2.1 Object: BidResponse
 //

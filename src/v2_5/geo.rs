@@ -1,4 +1,4 @@
-use serde_utils;
+use crate::serde_utils;
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub struct Geo {

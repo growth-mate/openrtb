@@ -6,7 +6,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use serde_utils;
+use crate::serde_utils;
 
 // This object represents both the links in the supply chain as well
 // as an indicator whether or not the supply chain is complete.
