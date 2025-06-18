@@ -1,8 +1,8 @@
+extern crate openrtb;
 extern crate serde_json;
-extern crate vizio_openrtb;
 
 use serde_json::json;
-use vizio_openrtb::v2_5::{AuctionType, BidRequest, BidResponse};
+use openrtb::v2_5::{AuctionType, BidRequest, BidResponse};
 
 #[test]
 fn brandscreen_request_mobile() {

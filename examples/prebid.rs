@@ -6,13 +6,13 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+extern crate openrtb;
 extern crate reqwest;
-extern crate vizio_openrtb;
 
 use std::error::Error;
 
 use reqwest::StatusCode;
-use vizio_openrtb::current::{BidRequest, BidResponse};
+use openrtb::current::{BidRequest, BidResponse};
 
 fn main() -> Result<(), Box<dyn Error>> {
     let id = "f9b54eb8-6f3b-11e8-adc0-fa7ae01bbebc".to_string();
