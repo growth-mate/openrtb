@@ -1,0 +1,53 @@
+{
+  "app": {
+    "bundle": "com.sample.bundle",
+    "domain": "sample.com",
+    "id": "2060634a462543c19c1e244d0adbbc24",
+    "name": "OTT Onboarding Demo",
+    "content": {
+      "id": "abc123",
+      "contentrating": "TV-PG",
+      "genre": "Action,Adventure",
+      "channel": "Test Channel",
+      "len": 3600
+    }
+  },
+  "regs": {
+    "ext": {
+      "us_privacy": "1---"
+    }
+  },
+  "device": {
+    "dnt": 0,
+    "h": 720,
+    "w": 1280,
+    "ifa": "a0d5cd20-68ec-4f45-bdd0-673aaedc88d2",
+    "ip": "204.78.58.34",
+    "connectiontype": 2,
+    "language": "en",
+    "make": "Amazon",
+    "model": "AFTT",
+    "os": "Android",
+    "osv": "5.1.0",
+    "ua": "Mozilla/5.0(Linux; Android 4.2.2; AFTB Build/JDQ39) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.173 Mobile Safari/537.22",
+    "geo": {
+      "lat": 80.0,
+      "lon": 170.0,
+      "country": "us"
+    }
+  },
+  "id": "36ee97f4-2f1f-4c78-93c1-2aa63f84bee9",
+  "imp": [
+    {
+      "id": "1",
+      "video": {
+        "mimes": [ "video/mp4" ],
+        "h": 640,
+        "w": 480,
+        "ext": {
+          "slotId": "2616bad5-a40d-4d5b-a541-990a28533988"
+        }
+      }
+    }
+  ]
+}

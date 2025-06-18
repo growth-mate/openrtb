@@ -1,0 +1,65 @@
+{
+  "ext": {
+    "amznregion": [
+      "useast"
+    ],
+    "amznbrmId": [
+      "QrbXaQDWdE3Qk_NzQGOEq8AAAAFvr2XN7AEAAA_ABv5kf"
+    ]
+  },
+  "cur": "USD",
+  "id": "123456",
+  "seatbid": [
+    {
+      "bid": [
+        {
+          "id": "36ee97f4-2f1f-4c78-93c1-2aa63f84bee9",
+          "price": 0.0,
+          "ext": {
+            "targeting": {
+              "b": [
+                "IrMY9KDPA8M9Z3_IqsOx8OIAAAFvr2XN6QEAAA_ABvTvL"
+              ],
+              "creativeURL": [
+                "https://aax-us.amazon-adsystem.com/e/mdtb/vast?b=IrMY9KDPA8M9Z3_IqsOx8OIAAAFvr2XN6QEAAA_ABvTvL"
+              ],
+              "amznslots": [
+                "ott6"
+              ],
+              "dc": [
+                "iad"
+              ]
+            }
+          },
+          "crid": "EAAYACogYhCY2wmU-wcCys6VI1Hg-kcBDxMKKW.K72kXwLu4IXcNIJ9ho_",
+          "adomain": [
+            "amazon.com"
+          ],
+          "cat": [
+            "IAB7-40",
+            "IAB7-41",
+            "IAB22-17",
+            "IAB7-44",
+            "IAB7-45",
+            "IAB7-17",
+            "IAB8-10",
+            "IAB7-19",
+            "IAB22",
+            "IAB22-2",
+            "IAB17-45",
+            "IAB7-31",
+            "IAB7",
+            "IAB7-32",
+            "IAB7-1",
+            "IAB7-3",
+            "IAB7-35",
+            "IAB7-5",
+            "IAB7-38",
+            "IAB7-39"
+          ],
+          "impid": "IrMY9KDPA8M9Z3_IqsOx8OIAAAFvrN6QEAAA_ABvTvLQo"
+        }
+      ]
+    }
+  ]
+}
