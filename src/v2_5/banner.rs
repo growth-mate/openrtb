@@ -51,6 +51,111 @@ pub struct Banner {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub battr: Vec<u64>,
 
+    /// Indicates if the banner is in the top frame as opposed to an
+    /// iframe, where 0 = no, 1 = yes.
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        serialize_with = "serde_utils::mbool_to_u8",
+        deserialize_with = "serde_utils::u8_to_mbool"
+    )]
+    pub topframe: Option<bool>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ext: Option<serde_utils::Ext>,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json;
+
+    #[test]
+    fn serialization_skip_fields() {
+        let banner = Banner {
+            format: vec![],
+            w: None,
+            h: None,
+            btype: vec![],
+            battr: vec![],
+            topframe: None,
+            ext: None,
+        };
+
+        let expected = r#"{}"#;
+        let serialized = serde_json::to_string(&banner).unwrap();
+
+        assert_eq!(expected, serialized)
+    }
+
+    #[test]
+    fn serialization_with_topframe() {
+        let banner = Banner {
+            format: vec![],
+            w: Some(300),
+            h: Some(250),
+            btype: vec![],
+            battr: vec![],
+            topframe: Some(true),
+            ext: None,
+        };
+
+        let serialized = serde_json::to_string(&banner).unwrap();
+        let deserialized: Banner = serde_json::from_str(&serialized).unwrap();
+
+        assert_eq!(banner, deserialized);
+        assert_eq!(banner.topframe, Some(true));
+        
+        // Verify it serializes to integer
+        assert!(serialized.contains("\"topframe\":1"));
+    }
+
+    #[test]
+    fn deserialize_topframe_yes() {
+        let json = r#"{"w":300,"h":250,"topframe":1}"#;
+        let banner: Banner = serde_json::from_str(json).unwrap();
+        
+        assert_eq!(banner.w, Some(300));
+        assert_eq!(banner.h, Some(250));
+        assert_eq!(banner.topframe, Some(true));
+    }
+
+    #[test]
+    fn deserialize_topframe_no() {
+        let json = r#"{"w":300,"h":250,"topframe":0}"#;
+        let banner: Banner = serde_json::from_str(json).unwrap();
+        
+        assert_eq!(banner.w, Some(300));
+        assert_eq!(banner.h, Some(250));
+        assert_eq!(banner.topframe, Some(false));
+    }
+
+    #[test]
+    fn deserialize_without_topframe() {
+        let json = r#"{"w":300,"h":250}"#;
+        let banner: Banner = serde_json::from_str(json).unwrap();
+        
+        assert_eq!(banner.w, Some(300));
+        assert_eq!(banner.h, Some(250));
+        assert_eq!(banner.topframe, None);
+    }
+
+    #[test]
+    fn test_rubiconproject_compatibility() {
+        // Test with the actual structure from rubiconproject test files
+        let json = r#"{
+            "w": 300,
+            "h": 250,
+            "pos": 1,
+            "battr": [9, 1, 14014, 3, 13, 10, 8, 14],
+            "topframe": 1
+        }"#;
+        
+        let banner: Banner = serde_json::from_str(json).unwrap();
+        
+        assert_eq!(banner.w, Some(300));
+        assert_eq!(banner.h, Some(250));
+        assert_eq!(banner.topframe, Some(true));
+        assert_eq!(banner.battr, vec![9, 1, 14014, 3, 13, 10, 8, 14]);
+    }
 }
