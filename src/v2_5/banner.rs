@@ -10,6 +10,7 @@ use crate::serde_utils;
 
 use super::banner_ad_type::BannerAdType;
 use super::format::Format;
+use super::ad_position::AdPosition;
 
 // 3.2.6 Object: Banner
 //
@@ -42,6 +43,10 @@ pub struct Banner {
     // recommended if no format objects are specified.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub h: Option<u32>,
+
+    // Ad position on screen. Refer to List 5.4.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pos: Option<AdPosition>,
 
     // Blocked banner ad types. Refer to List 5.2.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -76,6 +81,7 @@ mod tests {
             format: vec![],
             w: None,
             h: None,
+            pos: None,
             btype: vec![],
             battr: vec![],
             topframe: None,
@@ -94,6 +100,7 @@ mod tests {
             format: vec![],
             w: Some(300),
             h: Some(250),
+            pos: None,
             btype: vec![],
             battr: vec![],
             topframe: Some(true),
@@ -108,6 +115,59 @@ mod tests {
         
         // Verify it serializes to integer
         assert!(serialized.contains("\"topframe\":1"));
+    }
+
+    #[test]
+    fn serialization_with_position() {
+        let banner = Banner {
+            format: vec![],
+            w: Some(300),
+            h: Some(250),
+            pos: Some(AdPosition::AboveTheFold),
+            btype: vec![],
+            battr: vec![],
+            topframe: None,
+            ext: None,
+        };
+
+        let serialized = serde_json::to_string(&banner).unwrap();
+        let deserialized: Banner = serde_json::from_str(&serialized).unwrap();
+
+        assert_eq!(banner, deserialized);
+        assert_eq!(banner.pos, Some(AdPosition::AboveTheFold));
+        
+        // Verify it serializes to integer
+        assert!(serialized.contains("\"pos\":1"));
+    }
+
+    #[test]
+    fn deserialize_position_above_the_fold() {
+        let json = r#"{"w":300,"h":250,"pos":1}"#;
+        let banner: Banner = serde_json::from_str(json).unwrap();
+        
+        assert_eq!(banner.w, Some(300));
+        assert_eq!(banner.h, Some(250));
+        assert_eq!(banner.pos, Some(AdPosition::AboveTheFold));
+    }
+
+    #[test]
+    fn deserialize_position_below_the_fold() {
+        let json = r#"{"w":300,"h":250,"pos":3}"#;
+        let banner: Banner = serde_json::from_str(json).unwrap();
+        
+        assert_eq!(banner.w, Some(300));
+        assert_eq!(banner.h, Some(250));
+        assert_eq!(banner.pos, Some(AdPosition::BelowTheFold));
+    }
+
+    #[test]
+    fn deserialize_without_position() {
+        let json = r#"{"w":300,"h":250}"#;
+        let banner: Banner = serde_json::from_str(json).unwrap();
+        
+        assert_eq!(banner.w, Some(300));
+        assert_eq!(banner.h, Some(250));
+        assert_eq!(banner.pos, None);
     }
 
     #[test]
@@ -155,6 +215,7 @@ mod tests {
         
         assert_eq!(banner.w, Some(300));
         assert_eq!(banner.h, Some(250));
+        assert_eq!(banner.pos, Some(AdPosition::AboveTheFold));
         assert_eq!(banner.topframe, Some(true));
         assert_eq!(banner.battr, vec![9, 1, 14014, 3, 13, 10, 8, 14]);
     }
